@@ -1,27 +1,24 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
+const router = require("./routes/index");
+const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+
 const app = express();
-
-const { chats } = require("./data/data");
-
 app.use(cors());
+
+// parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
+// application route
+app.use('/api/v1', router)
 
-app.get("/", (req, res) => {
-    res.send("Chat Application!");
-});
-
-app.get("/api/v1/chats", (req, res) => {
-    res.send(chats);
-});
-
-app.get("/api/v1/chats/:id", (req, res) => {
-    const { id } = req.params;
-    res.send(chats.find((chat) => chat?._id === id));
-});
+// Error Handling middleware
+app.use(notFound);
+app.use(errorHandler);
 
 module.exports = { app };
 
