@@ -1,6 +1,7 @@
 const express = require("express");
 const AuthRoute = require("./AuthRoute");
 const UserRoute = require("./UserRoute");
+const ChatRoute = require("./chatRoute");
 
 const router = express.Router();
 
@@ -12,6 +13,10 @@ const moduleRoutes = [
     {
         path: "/users",
         route: UserRoute,
+    },
+    {
+        path: "/chats",
+        route: ChatRoute,
     },
 ];
 

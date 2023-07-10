@@ -1,9 +1,8 @@
-const User = require("../models/user.Model");
+const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 
 const saltRounds = process.env.SALT_ROUNDS;
-
 
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password, gender, image } = req.body;
@@ -50,4 +49,25 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { registerUser };
+const getUser = asyncHandler(async (req, res) => {
+    const searchTerm = req.query.search
+        ? {
+              $or: [
+                  { name: { $regex: req.query.search, $options: "i" } },
+                  { email: { $regex: req.query.search, $options: "i" } },
+              ],
+          }
+        : {};
+
+    const users = await User.find(searchTerm).find({
+        _id: { $ne: req.user._id },
+    });
+
+    res.status(201).json({
+        success: true,
+        message: "Users retrieved successfully",
+        data: users,
+    });
+});
+
+module.exports = { registerUser, getUser };
