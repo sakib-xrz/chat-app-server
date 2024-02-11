@@ -6,10 +6,10 @@ import cookieParser from "cookie-parser";
 
 import router from "./routes/index.js";
 import connectToDatabase from "./database/connectToDatabase.js";
+import { app, server } from "./socket/socket.js";
 
 dotenv.config();
 
-const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(morgan("dev"));
@@ -27,7 +27,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   connectToDatabase();
   console.log(`Server is listening on ${PORT}`);
 });
